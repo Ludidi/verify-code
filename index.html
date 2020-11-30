@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>verify-code</title>
+  <link rel="stylesheet" href="./css/verify-code.css">
+</head>
+<body>
+
+  <div id="code-container" style="height: 200px;"></div>
+  <br>
+  <button onclick="handleClickInit()">初始化</button>
+  <button onclick="handleClickReset()">重置</button>
+  <button onclick="handleClickDestroy()">销毁</button>
+
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="./js/verify-code.js"></script>
+
+  <script>
+    const verifyCodeEle = $('#code-container');
+
+    let verifyCode = null;
+
+
+    verifyCodeEle.on('ready', function() {
+      console.log('ready');
+    });
+
+    verifyCodeEle.on('success', function(event, time) {
+      console.log('success', time);
+      alert((time / 1000).toFixed(2) + 's 完成了');
+    });
+
+    verifyCodeEle.on('fail', function() {
+      console.log('fail');
+    });
+
+    // 初始化
+    function handleClickInit() {
+      if (verifyCode) return;
+      verifyCode = new VerifyCode(verifyCodeEle);
+      verifyCode.init();
+    }
+    
+    // 重置
+    function handleClickReset() {
+      if (verifyCode) verifyCode.reset();
+    }
+
+    // 销毁
+    function handleClickDestroy() {
+      if (verifyCode) verifyCode.destroy();
+      verifyCode = null;
+    }
+  
+
+  </script>
+</body>
+</html>
