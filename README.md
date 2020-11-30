@@ -6,12 +6,13 @@
 
 ### 使用方法:
 1.引入 jquery & ./js/verify-code.js
+
 2.引入 ./css/verify-code.css
 
 ### Options
 
 | 属性 | 说明 | 类型 | 默认值 |
-| --- | --- | --- | --- | --- |
+| --- | --- | --- | --- |
 | width | canvas宽度 | Number | 310 |
 | height | canvas高度 | Number | 155 |
 | accuracy | 精度，移动的偏差范围内。如果 <1 则不进行校验 | Number | 5 |
