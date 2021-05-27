@@ -14,9 +14,9 @@
       accuracy: 5, // 精度
       sliderText: '向右滑动', // 滑动文本
       images: [], // 默认图片
-      ready: function () {},
-      success: function () {},
-      fail: function () {},
+      ready: function () { },
+      success: function () { },
+      fail: function () { },
     };
     this.options = $.extend({}, this.defaults, opt);
   };
@@ -48,6 +48,11 @@
       this.$element
         .find($('.slide-verify-slider-mask-item'))
         .on('mousedown', function (event) {
+          that.mousedown(event);
+        });
+      this.$element
+        .find($('.slide-verify-slider-mask-item'))
+        .on('touchstart', function (event) {
           that.mousedown(event);
         });
     },
@@ -131,7 +136,7 @@
       return len > 0
         ? this.options.images[getRandomNumberByRange(0, len)]
         : '//picsum.photos/310/155/?image=' +
-            getRandomNumberByRange(0, 1084);
+        getRandomNumberByRange(0, 1084);
     },
 
     drawBlock: function () {
@@ -179,7 +184,7 @@
       ) {
         return;
       }
-
+      event.preventDefault();
       this.isMouseDown = true;
       this.sliderActive = true;
       this.timestamp = +new Date();
@@ -188,21 +193,21 @@
 
     // 开始拖拽
     moveStart: function (event) {
-      this.originX = event.clientX;
+      this.originX = event.clientX || event.targetTouches[0].pageX;
       this.originY = event.clientY;
 
       this.handlerMove = this.handleMove.bind(this);
       this.handlerMoveEnd = this.handleMoveEnd.bind(this);
-      window.addEventListener('mousemove', this.handlerMove, false);
-      window.addEventListener('mouseup', this.handlerMoveEnd, false);
+      this.flag = 'ontouchstart' in window;
+      window.addEventListener((this.flag ? 'touchmove' : 'mousemove'), this.handlerMove, false);
+      window.addEventListener((this.flag ? 'touchend' : 'mouseup'), this.handlerMoveEnd, false);
     },
 
     // 拖拽中
     handleMove: function (event) {
       if (!this.isMouseDown) return;
-
-      const moveX = event.clientX - this.originX;
-
+      const clientX = event.clientX || event.targetTouches[0].pageX
+      const moveX = clientX - this.originX;
       if (moveX <= 0 || moveX >= this.options.width - 40 - r * 2) return;
 
       this.sliderLeft = moveX + 'px';
@@ -240,8 +245,8 @@
       }
 
       // 解绑
-      window.removeEventListener('mousemove', this.handlerMove, false);
-      window.removeEventListener('mouseup', this.handlerMoveEnd, false);
+      window.removeEventListener((this.flag ? 'touchmove' : 'mousemove'), this.handlerMove, false);
+      window.removeEventListener((this.flag ? 'touchend' : 'mouseup'), this.handlerMoveEnd, false);
     },
 
     // 校验
